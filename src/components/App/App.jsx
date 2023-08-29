@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import { useSelector, useDispatch } from 'react-redux';
+import { setContacts, setFilter } from 'redux/appReducer';
 
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { ContactList } from 'components/ContactList/ContactList';
@@ -7,21 +9,9 @@ import { Filter } from 'components/Filter/Filter';
 import { Section } from 'components/Section/Section';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts !== null) {
-      const parsedContacts = JSON.parse(savedContacts);
-      return parsedContacts;
-    }
-    return [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ];
-  });
-
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(state => state.appDetails.contacts);
+  const filter = useSelector(state => state.appDetails.filter);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -33,27 +23,25 @@ export const App = () => {
     );
 
     if (hasName) {
-      alert(`${name} is alredy in contacts`);
+      alert(`${name} is already in contacts`);
       return;
     }
 
-    const newContact = { name: name, id: nanoid(), number: number };
+    const newContact = { name, id: nanoid(), number };
 
-    setContacts(prevContacts => [newContact, ...prevContacts]);
+    dispatch(setContacts([newContact, ...contacts]));
   };
 
   const deleteContact = idContact => {
-    setContacts(prevContacts =>
-      prevContacts.filter(({ id }) => id !== idContact)
-    );
+    dispatch(setContacts(contacts.filter(({ id }) => id !== idContact)));
   };
 
   const handleChangeFilter = event => {
     const { value } = event.currentTarget;
-    setFilter(value);
+    dispatch(setFilter(value));
   };
 
-  const getVisibelContats = () => {
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
 
     return contacts.filter(contact =>
@@ -61,7 +49,7 @@ export const App = () => {
     );
   };
 
-  const visibleContacts = getVisibelContats();
+  const visibleContacts = getVisibleContacts();
 
   return (
     <>
@@ -70,7 +58,7 @@ export const App = () => {
       </Section>
 
       <Section title={'Contacts'}>
-        <Filter value={filter} onChange={handleChangeFilter}></Filter>
+        <Filter value={filter} onChange={handleChangeFilter} />
         <ContactList
           contacts={visibleContacts}
           onDeleteContact={deleteContact}

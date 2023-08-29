@@ -1,10 +1,15 @@
-import { useState } from 'react';
-
+// import { useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setName, setNumber } from 'redux/contactFormReducer';
 
 export const ContactForm = ({ onSubmit }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  // const [name, setName] = useState('');
+  // const [number, setNumber] = useState('');
+  const name = useSelector(state => state.contactFormDetails.name);
+  const number = useSelector(state => state.contactFormDetails.number);
+  const dispatch = useDispatch();
 
   const idInputName = nanoid();
   const idInputNumber = nanoid();
@@ -12,9 +17,11 @@ export const ContactForm = ({ onSubmit }) => {
   const handleChange = event => {
     const { name, value } = event.target;
     if (name === 'name') {
-      setName(value);
+      // setName(value);
+      dispatch(setName(value));
     } else if (name === 'number') {
-      setNumber(value);
+      // setNumber(value);
+      dispatch(setNumber(value));
     }
   };
 
@@ -25,8 +32,11 @@ export const ContactForm = ({ onSubmit }) => {
   };
 
   const reset = () => {
-    setName('');
-    setNumber('');
+    // setName('');
+    dispatch(setName(''));
+    dispatch(setNumber(''));
+
+    // setNumber('');
   };
 
   return (
