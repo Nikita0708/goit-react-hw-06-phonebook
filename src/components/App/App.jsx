@@ -13,9 +13,9 @@ export const App = () => {
   const filter = useSelector(state => state.appDetails.filter);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
   const addContact = ({ name, number }) => {
     const hasName = contacts.some(
