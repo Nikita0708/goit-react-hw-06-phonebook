@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { nanoid } from 'nanoid';
 import { useSelector, useDispatch } from 'react-redux';
 import { setContacts, setFilter } from 'redux/appReducer';
