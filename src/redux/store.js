@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import contactFormReducer from './contactFormReducer';
+import rootReducer from './rootReducer';
 import { combineReducers } from '@reduxjs/toolkit';
-import appReducer from './appReducer';
+
 import {
   persistStore,
   persistReducer,
@@ -16,7 +17,7 @@ import storage from 'redux-persist/lib/storage';
 
 const reducer = combineReducers({
   contactFormDetails: contactFormReducer,
-  appDetails: appReducer,
+  generalDetails: rootReducer,
 });
 
 const persistConfig = {

@@ -3,40 +3,51 @@ import { nanoid } from 'nanoid';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setName, setNumber } from 'redux/contactFormReducer';
+import { setContacts } from 'redux/rootReducer';
 
-export const ContactForm = ({ onSubmit }) => {
-  // const [name, setName] = useState('');
-  // const [number, setNumber] = useState('');
+export const ContactForm = () => {
   const name = useSelector(state => state.contactFormDetails.name);
   const number = useSelector(state => state.contactFormDetails.number);
+  const contacts = useSelector(state => state.generalDetails.contacts);
+
   const dispatch = useDispatch();
 
   const idInputName = nanoid();
   const idInputNumber = nanoid();
 
+  const addContact = ({ name, number }) => {
+    const hasName = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (hasName) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    const newContact = { name, id: nanoid(), number };
+
+    dispatch(setContacts([newContact, ...contacts]));
+  };
+
   const handleChange = event => {
     const { name, value } = event.target;
     if (name === 'name') {
-      // setName(value);
       dispatch(setName(value));
     } else if (name === 'number') {
-      // setNumber(value);
       dispatch(setNumber(value));
     }
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    onSubmit({ name, number });
+    addContact({ name, number });
     reset();
   };
 
   const reset = () => {
-    // setName('');
     dispatch(setName(''));
     dispatch(setNumber(''));
-
-    // setNumber('');
   };
 
   return (
